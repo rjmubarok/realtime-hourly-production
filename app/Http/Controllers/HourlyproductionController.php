@@ -16,6 +16,8 @@ use App\Models\Hourlyproduction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Exports\HourlyProductionReportExport;
+use App\Exports\ProductionSpecificDateExport;
+use App\Exports\ProductionReportDateToDateExport;
 use Maatwebsite\Excel\Facades\Excel;
 class HourlyproductionController extends Controller
 {
@@ -317,12 +319,25 @@ public function summary_specific_date(Request $request){
 
    return view('spesipic_date_summary', compact('productions','today'));
 }
+public function SpesificDateexport($date)
+{
+    $date = $date;
+    $productions = Floor::whereStatus(1)->with(['hourlyproductions' => function ($query) use ($date) {
+        $query->whereDate('created_at', $date);
+
+    }])->get();
+    return Excel::download(
+        new ProductionSpecificDateExport($productions, $date),
+
+        'report_' . $date . '.xlsx'
+    );
+}
+
 public function SummeryFilter(Request $request)
 {
-    
-    $start_date = $request->input('start_date') . ' 00:00:00';
-    $end_date = $request->input('end_date') . ' 23:59:59';
 
+    $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
+    $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
 
 
     $floors = Floor::where('status', 1)
@@ -360,6 +375,67 @@ public function SummeryFilter(Request $request)
    // return $productions;
     return view('summary_filter', compact('productions', 'start_date', 'end_date'));
 }
+public function DateToDateExport(Request $request)
+{
+
+    $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
+    $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
+
+   // return $start_date;
+
+
+
+    $floors = Floor::where('status', 1)
+        ->with(['lines.hourlyproductions' => function ($query) use ($start_date, $end_date) {
+            $query->whereBetween('created_at', [$start_date, $end_date]);
+        }])
+        ->get();
+
+    // Sum production values per line
+    $productions = $floors->map(function ($floor) {
+        return [
+            'floor_name' => $floor->name,
+            'lines' => $floor->lines->map(function ($line) {
+                $totals = [
+                    'first' => 0, 'second' => 0, 'third' => 0, 'fourth' => 0,
+                    'fifth' => 0, 'sixth' => 0, 'seventh' => 0, 'eighth' => 0,
+                    'ninth' => 0, 'tenth' => 0, 'eleventh' => 0, 'twelfth' => 0,
+                    'day_tar' => 0, 'hourly_tar' => 0
+                ];
+
+                foreach ($line->hourlyproductions as $production) {
+                    foreach ($totals as $key => $val) {
+                        $totals[$key] += $production->$key;
+                    }
+                }
+
+                return [
+                    'line_name' => $line->name,
+                    'totals' => $totals
+                ];
+            })
+        ];
+    });
+
+  //  return $productions;
+    return Excel::download(
+        new ProductionReportDateToDateExport($productions, $start_date, $end_date),
+        'report_' . $start_date .'_to_'.$end_date. '.xlsx'
+    );
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

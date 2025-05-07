@@ -1,23 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Hourly Production Summary</title>
-    @if (Route::is('hourlyproduction_summary'))
-        <meta http-equiv="refresh" content="120">
-    @endif
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-</head>
-
-<body>
-<a href="{{ route('export.production', ['date' => $today]) }}" class="btn btn-success">Export to Excel</a>
 
     @foreach ($productions as $floor)
         <?php $sum_today_target = 0; ?>
@@ -41,57 +23,54 @@
         <?php $fourhour_ot = 0; ?>
 
 
-        <div class="col-md-12">
+    
 
 
 
-            <div class="card card-info d-flex justify-content-between">
-                <div class="card-body text-center " style=" background-color: lightblue;">
-                    <h3 class=" text-bold mt-2">Hourly Production Summary</h3>
-
-                    <h3 class=" text-bold mt-2">Line Wise Hourly Production Floor - {{ $floor->name ?? '' }}</h3>
-                    <h3 class=" text-bold mt-2">Date: {{ $today }}</h3>
-
+          
+               
+                    <h3 style="text-align: center;">Hourly Production Summary</h3>
+                    <h3 style="text-align: center;">Line Wise Hourly Production Floor - {{ $floor->name ?? '' }}</h3>
+                    <h3 style="text-align: center;">Date: {{ $date }}</h3>
 
 
 
 
 
-                </div>
-            </div>
-            <table id="customTable" class="table table-striped table-bordered table-sm">
+
+                
+        <table border="1" cellpadding="5" cellspacing="0">
                 @if ($floor->hourlyproductions->count())
                     <thead>
-                        <tr style="background-color:#110c3b;color:white;font-size:18px;">
+                        <tr >
 
-                            <th scope="col">Line Name</th>
-                            <th scope="col">Buyer Name</th>
-                            <th scope="col">Style Name</th>
-                            <th scope="col">Today Target</th>
-                            <th scope="col">Hourly Target</th>
-                            <th scope="col">1st</th>
-                            <th scope="col">2nd</th>
-                            <th scope="col">3rd</th>
-                            <th scope="col">4th</th>
-                            <th scope="col">5th</th>
-                            <th scope="col">6th</th>
-                            <th scope="col">7th</th>
-                            <th scope="col">8th</th>
-                            <th scope="col">9th</th>
-                            <th scope="col">10th</th>
-                            <th scope="col">11th</th>
-                            <th scope="col">12th</th>
-                            {{--  <th scope="col">13th</th>
-                            <th scope="col">14th</th>  --}}
-                            <th scope="col">Total</th>
-                            <th scope="col">Remarks</th>
+                            <th >Line Name</th>
+                            <th >Buyer Name</th>
+                            <th >Style Name</th>
+                            <th >Today Target</th>
+                            <th >Hourly Target</th>
+                            <th >1st</th>
+                            <th >2nd</th>
+                            <th >3rd</th>
+                            <th >4th</th>
+                            <th >5th</th>
+                            <th >6th</th>
+                            <th >7th</th>
+                            <th >8th</th>
+                            <th >9th</th>
+                            <th >10th</th>
+                            <th >11th</th>
+                            <th >12th</th>
+                        
+                            <th >Total</th>
+                            <th >Remarks</th>
                         </tr>
 
                     </thead>
                     <tbody>
 
                         @foreach ($floor->hourlyproductions as $production)
-                            <tr>
+                                <tr>
 
                                 <td> {{ $production->line->name ?? '' }}</td>
                                 <td> {{ $production->buyer }} </td>
@@ -102,192 +81,165 @@
                                 </td>
                                 @if ($production->first > 0 && $production->hourly_tar > 0)
                                     @if (($production->first / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->first }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->first }}</td>
                                     @elseif(($production->first / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->first }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->first }}</td>
                                     @elseif(($production->first / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->first }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->first }}</td>
                                     @elseif(($production->first / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->first }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->first }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->first }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->first }}</td>
                                 @endif
 
 
                                 @if ($production->second > 0 && $production->hourly_tar > 0)
                                     @if (($production->second / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->second }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->second }}</td>
                                     @elseif(($production->second / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->second }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->second }}</td>
                                     @elseif(($production->second / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->second }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->second }}</td>
                                     @elseif(($production->second / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->second }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->second }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->second }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->second }}</td>
                                 @endif
                                 @if ($production->third > 0 && $production->hourly_tar > 0)
                                     @if (($production->third / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->third }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->third }}</td>
                                     @elseif(($production->third / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->third }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->third }}</td>
                                     @elseif(($production->third / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->third }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->third }}</td>
                                     @elseif(($production->third / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->third }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->third }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->third }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->third }}</td>
                                 @endif
                                 @if ($production->fourth > 0 && $production->hourly_tar > 0)
                                     @if (($production->fourth / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->fourth }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->fourth }}</td>
                                     @elseif(($production->fourth / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->fourth }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->fourth }}</td>
                                     @elseif(($production->fourth / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->fourth }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->fourth }}</td>
                                     @elseif(($production->fourth / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->fourth }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->fourth }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->fourth }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->fourth }}</td>
                                 @endif
                                 @if ($production->fifth > 0 && $production->hourly_tar > 0)
                                     @if (($production->fifth / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->fifth }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->fifth }}</td>
                                     @elseif(($production->fifth / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->fifth }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->fifth }}</td>
                                     @elseif(($production->fifth / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->fifth }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->fifth }}</td>
                                     @elseif(($production->fifth / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->fifth }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->fifth }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->fifth }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->fifth }}</td>
                                 @endif
                                 @if ($production->sixth > 0 && $production->hourly_tar > 0)
                                     @if (($production->sixth / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->sixth }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->sixth }}</td>
                                     @elseif(($production->sixth / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->sixth }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->sixth }}</td>
                                     @elseif(($production->sixth / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->sixth }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->sixth }}</td>
                                     @elseif(($production->sixth / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->sixth }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->sixth }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->sixth }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->sixth }}</td>
                                 @endif
                                 @if ($production->seventh > 0 && $production->hourly_tar > 0)
                                     @if (($production->seventh / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->seventh }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->seventh }}</td>
                                     @elseif(($production->seventh / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->seventh }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->seventh }}</td>
                                     @elseif(($production->seventh / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->seventh }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->seventh }}</td>
                                     @elseif(($production->seventh / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->seventh }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->seventh }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->seventh }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->seventh }}</td>
                                 @endif
                                 @if ($production->eighth > 0 && $production->hourly_tar > 0)
                                     @if (($production->eighth / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->eighth }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->eighth }}</td>
                                     @elseif(($production->eighth / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->eighth }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->eighth }}</td>
                                     @elseif(($production->eighth / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->eighth }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->eighth }}</td>
                                     @elseif(($production->eighth / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->eighth }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->eighth }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->eighth }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->eighth }}</td>
                                 @endif
                                 @if ($production->ninth > 0 && $production->hourly_tar > 0)
                                     @if (($production->ninth / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->ninth }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->ninth }}</td>
                                     @elseif(($production->ninth / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->ninth }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->ninth }}</td>
                                     @elseif(($production->ninth / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->ninth }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->ninth }}</td>
                                     @elseif(($production->ninth / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->ninth }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->ninth }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->ninth }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->ninth }}</td>
                                 @endif
                                 @if ($production->tenth > 0 && $production->hourly_tar > 0)
                                     @if (($production->tenth / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->tenth }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->tenth }}</td>
                                     @elseif(($production->tenth / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->tenth }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->tenth }}</td>
                                     @elseif(($production->tenth / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->tenth }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->tenth }}</td>
                                     @elseif(($production->tenth / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->tenth }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->tenth }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->tenth }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->tenth }}</td>
                                 @endif
                                 @if ($production->eleventh > 0 && $production->hourly_tar > 0)
                                     @if (($production->eleventh / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->eleventh }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->eleventh }}</td>
                                     @elseif(($production->eleventh / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->eleventh }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->eleventh }}</td>
                                     @elseif(($production->eleventh / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->eleventh }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->eleventh }}</td>
                                     @elseif(($production->eleventh / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->eleventh }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->eleventh }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->eleventh }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->eleventh }}</td>
                                 @endif
 
                                 @if ($production->twelfth > 0 && $production->hourly_tar > 0)
                                     @if (($production->twelfth / $production->hourly_tar) * 100 <= 50)
-                                        <td cope="col" class="bg-red">{{ $production->twelfth }}</td>
+                                        <td cope="col" style="background-color:red;">{{ $production->twelfth }}</td>
                                     @elseif(($production->twelfth / $production->hourly_tar) * 100 <= 99)
-                                        <td cope="col" class="bg-yellow">{{ $production->twelfth }}</td>
+                                        <td cope="col" style="background-color:yellow;">{{ $production->twelfth }}</td>
                                     @elseif(($production->twelfth / $production->hourly_tar) * 100 == 100)
-                                        <td cope="col" class="bg-green">{{ $production->twelfth }}</td>
+                                        <td cope="col" style="background-color:green;">{{ $production->twelfth }}</td>
                                     @elseif(($production->twelfth / $production->hourly_tar) * 100 >= 100)
-                                        <td cope="col" class="bg-blue">{{ $production->twelfth }}</td>
+                                        <td cope="col"style="background-color:blue;">{{ $production->twelfth }}</td>
                                     @endif
                                 @else
-                                    <td cope="col" class="bg-red">{{ $production->twelfth }}</td>
+                                    <td cope="col" style="background-color:red;">{{ $production->twelfth }}</td>
                                 @endif
 
-                                {{--  @if ($production->thirteenth > 0 && $production->hourly_tar > 0)
-                                @if (($production->thirteenth / $production->hourly_tar) * 100 <= 50)
-                                     <td cope="col" class="bg-red">{{ $production->thirteenth }}</td>
-                                @elseif((($production->thirteenth/$production->hourly_tar)* 100)  <= 99)
-                                     <td cope="col" class="bg-yellow">{{ $production->thirteenth }}</td>
-                                @elseif((($production->thirteenth/$production->hourly_tar)* 100)  == 100)
-                                     <td cope="col" class="bg-green">{{ $production->thirteenth }}</td>
-                                @elseif((($production->thirteenth/$production->hourly_tar)* 100)  >= 100)
-                                     <td cope="col" class="bg-blue">{{ $production->thirteenth }}</td>
-
-                                @endif
-                                 @else
-                           <td cope="col" class="bg-red">{{ $production->thirteenth }}</td>
-                            @endif
-                            @if ($production->fourteenth > 0 && $production->hourly_tar > 0)
-                                @if (($production->fourteenth / $production->hourly_tar) * 100 <= 50)
-                                     <td cope="col" class="bg-red">{{ $production->fourteenth }}</td>
-                                @elseif((($production->fourteenth/$production->hourly_tar)* 100)  <= 99)
-                                     <td cope="col" class="bg-yellow">{{ $production->fourteenth }}</td>
-                                @elseif((($production->fourteenth/$production->hourly_tar)* 100)  == 100)
-                                     <td cope="col" class="bg-green">{{ $production->fourteenth }}</td>
-                                @elseif((($production->fourteenth/$production->hourly_tar)* 100)  >= 100)
-                                     <td cope="col" class="bg-blue">{{ $production->fourteenth }}</td>
-
-                                @endif
-                                 @else
-                           <td cope="col" class="bg-red">{{ $production->fourteenth }}</td>
-                            @endif  --}}
+                               
                                 <td>{{ $production->first + $production->second + $production->third + $production->fourth + $production->fifth + $production->sixth + $production->seventh + $production->eighth + $production->ninth + $production->tenth + $production->eleventh + $production->twelfth + $production->thirteenth + $production->fourteenth }}
                                 </td>
                                 <td>{{ $production->remark }}
@@ -342,37 +294,36 @@
                             <td>{{ $tenth }}</td>
                             <td>{{ $eleventh }}</td>
                             <td>{{ $twelfth }}</td>
-                            {{--  <td>{{ $thirteenth }}</td>
-                            <td>{{ $fourteenth }}</td>  --}}
+                          
                             <td>{{ $total }}</td>
                         </tr>
                         <tr>
-                            <td colspan="3" class="text-bold"> Target Achievement of the Day:@if ($total > 0 && $sum_today_target > 0)
+                            <td colspan="3"> Target Achievement of the Day:@if ($total > 0 && $sum_today_target > 0)
                                     {{ number_format(($total / $sum_today_target) * 100, 2) }}%
                                 @else
                                     {{ number_format(0, 2) }}%
                                 @endif
                             </td>
-                            <td colspan="4" class="text-bold">Target Achievement in 1st Hour:@if ($first > 0 && $sum_hourly_target > 0)
+                            <td colspan="4">Target Achievement in 1st Hour:@if ($first > 0 && $sum_hourly_target > 0)
                                     {{ number_format(($first / $sum_hourly_target) * 100, 2) }}%
                                 @else
                                     {{ number_format(0, 2) }}%
                                 @endif
                             </td>
-                            <td colspan="4" class="text-bold">Target Achievement in 2nd Hour:@if ($second > 0 && $sum_hourly_target > 0)
+                            <td colspan="4">Target Achievement in 2nd Hour:@if ($second > 0 && $sum_hourly_target > 0)
                                     {{ number_format(($second / $sum_hourly_target) * 100, 2) }}%
                                 @else
                                     {{ number_format(0, 2) }}%
                                 @endif
                             </td>
-                            <td colspan="4" class="text-bold"> Target Achievement after 08 Hours Routine Duty:
+                            <td colspan="4"> Target Achievement after 08 Hours Routine Duty:
                                 @if ($eighthourrutine > 0 && $sum_hourly_target > 0)
                                     {{ number_format(($eighthourrutine / ($sum_hourly_target * 8)) * 100, 2) }}%
                                 @else
                                     {{ number_format(0, 2) }}%
                                 @endif
                             </td>
-                            <td colspan="4" class="text-bold"> Target Achievement during 04 Hours OT:@if ($fourhour_ot > 0 && $sum_hourly_target > 0)
+                            <td colspan="4"> Target Achievement during 04 Hours OT:@if ($fourhour_ot > 0 && $sum_hourly_target > 0)
                                     {{ number_format(($fourhour_ot / ($sum_hourly_target * 4)) * 100, 2) }}%
                                 @else
                                     {{ number_format(0, 2) }}%
@@ -382,11 +333,10 @@
                     </tbody>
             </table>
         @else
-            <h3 class="text-danger text-center">Data Not Found For Today </h3>
+            <h3 style="background-color:blue;">Data Not Found For Today </h3>
     @endif
 
 
-    </div>
     @endforeach
 
 
@@ -412,33 +362,3 @@
 
 
 
-
-
-    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
-
-
-
-
-
-    <script>
-        setTimeout(function() {
-            location.reload();
-        }, 120000); // 120000 ms = 2 minutes
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#customTable').DataTable({
-                "scrollX": true,
-                "ordering": false,
-                "searching": false,
-                "paging": false,
-                "info": false,
-            });
-        });
-    </script>
-
-</body>
-
-</html>

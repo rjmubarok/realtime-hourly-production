@@ -71,6 +71,8 @@ Route::post('/summary/specific/date', [HourlyproductionController::class, 'summa
 Route::post('/download-hourly-dawload', [HourlyproductionController::class, 'downloadReport'])->name('download.hourly.report');
 Route::POST('/summary_filter', [HourlyproductionController::class, 'SummeryFilter'])->name('summary_filter');
 Route::POST('/specific/date', [HourlyproductionController::class, 'SpecificDateData'])->name('specific_date_data');
+Route::get('/export-production/{date}', [HourlyproductionController::class, 'SpesificDateexport'])->name('export.production');
+Route::post('/datetodate.summary.export', [HourlyproductionController::class, 'DateToDateExport'])->name('datetodate.summary.export');
 
 
 

@@ -611,17 +611,17 @@ background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 
                     @endif
                 @endforeach
                 <tr class="bg-green">
-                    <td>Grand Total</td>
+                    <td >Grand Total </td>
                     <td>{{ $sum_Floor_today_target }}</td>
                     <td>{{ $sum_Floor_today_achievement }}</td>
-                    <td>{{ number_format($avrg / $productions->count(), 2) }}%</td>
+                    <td>{{ number_format($avrg / $excludebrandfloorproductions->count(), 2) }}%</td>
                     <td>{{ $sum_Floor_hourly_target }}</td>
                     <td>{{ $sum_Floor_first_achievement }}</td>
-                    <td>{{ number_format($avrg_fristhour / $productions->count(), 2) }}%</td>
+                    <td>{{ number_format($avrg_fristhour / $excludebrandfloorproductions->count(), 2) }}%</td>
                     <td>{{ $sum_allfloor_second_achievement }}</td>
-                    <td>{{ number_format($avrg_secondhour / $productions->count(), 2) }}%</td>
-                    <td>{{ number_format($avrg_eighthour / $productions->count(), 2) }}%</td>
-                    <td>{{ number_format($avrg_othour / $productions->count(), 2) }}%</td>
+                    <td>{{ number_format($avrg_secondhour / $excludebrandfloorproductions->count(), 2) }}%</td>
+                    <td>{{ number_format($avrg_eighthour / $excludebrandfloorproductions->count(), 2) }}%</td>
+                    <td>{{ number_format($avrg_othour / $excludebrandfloorproductions->count(), 2) }}%</td>
                 </tr>
             </tbody>
 
