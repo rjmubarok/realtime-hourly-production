@@ -343,12 +343,15 @@
         @csrf
         {{--  <input hidden type="date" name="start_date" value="{{ $start_date }}" >
     <input hidden type="date" name="end_date" value="{{ $end_date }}" >  --}}
-        <input hidden type="date" name="start_date" value="{{ \Carbon\Carbon::parse($start_date)->format('Y-m-d') }}">
-<input hidden type="date" name="end_date" value="{{ \Carbon\Carbon::parse($end_date)->format('Y-m-d') }}">
-
-
+        <input hidden type="date" name="start_date"
+            value="{{ \Carbon\Carbon::parse($start_date)->format('Y-m-d') }}">
+        <input hidden type="date" name="end_date"
+            value="{{ \Carbon\Carbon::parse($end_date)->format('Y-m-d') }}">
         <button class="btn btn-info mb-4" type="submit">Export Summary</button>
     </form>
+
+
+
 
 
 

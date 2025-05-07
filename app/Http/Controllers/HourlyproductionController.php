@@ -296,14 +296,18 @@ public function Summary(){
         $query->whereDate('created_at', $today);
 
     }])->get();
+    $allproductions = Floor::whereStatus(1)->with(['hourlyproductions' => function ($query) use ($today) {
+        $query->whereDate('created_at', $today);
+
+    }])->get();
     $excludebrandfloorproductions = Floor::whereStatus(1)
     ->where('name', '!=', 'BRAND')
     ->with(['hourlyproductions' => function ($query) use ($today) {
         $query->whereDate('created_at', $today);
     }])->get();
-    //return    $productions;
+   // dd( $productions)   ;
 
-   return view('hourly_production_summary', compact('productions','floor','excludebrandfloorproductions'));
+   return view('hourly_production_summary', compact('productions','floor','allproductions','excludebrandfloorproductions'));
 }
 public function summary_specific_date(Request $request){
 
@@ -316,8 +320,17 @@ public function summary_specific_date(Request $request){
 
     }])->get();
    //return $productions;
+   $allproductions = Floor::whereStatus(1)->with(['hourlyproductions' => function ($query) use ($today) {
+    $query->whereDate('created_at', $today);
 
-   return view('spesipic_date_summary', compact('productions','today'));
+}])->get();
+$excludebrandfloorproductions = Floor::whereStatus(1)
+->where('name', '!=', 'BRAND')
+->with(['hourlyproductions' => function ($query) use ($today) {
+    $query->whereDate('created_at', $today);
+}])->get();
+
+   return view('spesipic_date_summary', compact('productions','today','excludebrandfloorproductions','allproductions'));
 }
 public function SpesificDateexport($date)
 {
@@ -326,8 +339,17 @@ public function SpesificDateexport($date)
         $query->whereDate('created_at', $date);
 
     }])->get();
+    $allproductions = Floor::whereStatus(1)->with(['hourlyproductions' => function ($query) use ($date) {
+        $query->whereDate('created_at', $date);
+
+    }])->get();
+    $excludebrandfloorproductions = Floor::whereStatus(1)
+->where('name', '!=', 'BRAND')
+->with(['hourlyproductions' => function ($query) use ($date) {
+    $query->whereDate('created_at', $date);
+}])->get();
     return Excel::download(
-        new ProductionSpecificDateExport($productions, $date),
+        new ProductionSpecificDateExport($productions,$allproductions,$excludebrandfloorproductions, $date),
 
         'report_' . $date . '.xlsx'
     );
@@ -422,7 +444,7 @@ public function DateToDateExport(Request $request)
         new ProductionReportDateToDateExport($productions, $start_date, $end_date),
         'report_' . $start_date .'_to_'.$end_date. '.xlsx'
     );
-  
+
 }
 
 

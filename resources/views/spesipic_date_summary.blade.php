@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<a href="{{ route('export.production', ['date' => $today]) }}" class="btn btn-success">Export to Excel</a>
+    <a href="{{ route('export.production', ['date' => $today]) }}" class="btn btn-success">Export to Excel</a>
 
     @foreach ($productions as $floor)
         <?php $sum_today_target = 0; ?>
@@ -392,6 +392,297 @@
 
 
 
+
+
+
+    @php
+        use Carbon\Carbon;
+
+        $sum_Floor_today_target = 0;
+        $sum_Floor_today_achievement = 0;
+        $sum_Floor_hourly_target = 0;
+        $sum_Floor_first_achievement = 0;
+        $sum_allfloor_second_achievement = 0;
+        $avrg = 0;
+        $avrg_fristhour = 0;
+        $avrg_secondhour = 0;
+        $avrg_eighthour = 0;
+        $avrg_othour = 0;
+    @endphp
+
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body text-center"
+                style="background: linear-gradient(90deg, rgba(224, 58, 58, 1) 5%, rgba(0, 0, 255, 1) 55%, rgba(155, 30, 217, 0.75) 95%);">
+                <h3 class="text-bold mt-2">Floor Wise Production Summary </h3>
+                <h3 class="text-bold mt-2">Date: {{ \Carbon\Carbon::now()->format('Y-M-d') }}</h3>
+            </div>
+        </div>
+
+        <table class="table table-striped table-bordered table-sm">
+            <thead>
+                <tr
+                    style="background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%); font-size:14px;">
+                    <th>Floor Name</th>
+                    <th>Today Target Sum</th>
+                    <th>Today Achievement Sum</th>
+                    <th>Today Target Achievement %</th>
+                    <th>Hourly Target Sum</th>
+                    <th>First Hour Achievement Sum</th>
+                    <th>First Hour Achievement %</th>
+                    <th>Second Hour Achievement Sum</th>
+                    <th>Second Hour Achievement %</th>
+                    <th>8 Hour Achievement %</th>
+                    <th>4 Hour Achievement %</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $sumTodayTarget = $sumTodayAchieved = $sumHourlyTarget = 0;
+                    $sumFirstHour = $sumSecondHour = $sum8HourAchieved = $sum4HourAchieved = 0;
+                    $totalPercent = $totalFirstHourPercent = $totalSecondHourPercent = 0;
+                    $total8HourPercent = $total4HourPercent = 0;
+                    $floorCount = 0;
+                @endphp
+
+                @foreach ($allproductions as $floor)
+                    @php
+                        $productions = $floor->hourlyproductions;
+                    @endphp
+
+                    @if ($productions->count())
+                        @php
+                            $floorCount++;
+
+                            $dayTarget = $productions->sum('day_tar');
+                            $hourlyTarget = $productions->sum('hourly_tar');
+
+                            $first = $productions->sum('first');
+                            $second = $productions->sum('second');
+
+                            $fullDayAchieved = $productions->sum(function ($p) {
+                                return $p->first +
+                                    $p->second +
+                                    $p->third +
+                                    $p->fourth +
+                                    $p->fifth +
+                                    $p->sixth +
+                                    $p->seventh +
+                                    $p->eighth +
+                                    $p->ninth +
+                                    $p->tenth +
+                                    $p->eleventh +
+                                    $p->twelfth;
+                            });
+
+                            $eightHourAchieved = $productions->sum(function ($p) {
+                                return $p->first +
+                                    $p->second +
+                                    $p->third +
+                                    $p->fourth +
+                                    $p->fifth +
+                                    $p->sixth +
+                                    $p->seventh +
+                                    $p->eighth;
+                            });
+
+                            $otAchieved = $productions->sum(function ($p) {
+                                return $p->ninth + $p->tenth + $p->eleventh + $p->twelfth;
+                            });
+
+                            // Totals
+                            $sumTodayTarget += $dayTarget;
+                            $sumTodayAchieved += $fullDayAchieved;
+                            $sumHourlyTarget += $hourlyTarget;
+                            $sumFirstHour += $first;
+                            $sumSecondHour += $second;
+                            $sum8HourAchieved += $eightHourAchieved;
+                            $sum4HourAchieved += $otAchieved;
+
+                            // Percentages
+                            $todayPercent = $dayTarget ? ($fullDayAchieved / $dayTarget) * 100 : 0;
+                            $firstHourPercent = $hourlyTarget ? ($first / $hourlyTarget) * 100 : 0;
+                            $secondHourPercent = $hourlyTarget ? ($second / $hourlyTarget) * 100 : 0;
+                            $eightHourPercent = $hourlyTarget ? ($eightHourAchieved / ($hourlyTarget * 8)) * 100 : 0;
+                            $otHourPercent = $hourlyTarget ? ($otAchieved / ($hourlyTarget * 4)) * 100 : 0;
+
+                            // Average Accumulation
+                            $totalPercent += $todayPercent;
+                            $totalFirstHourPercent += $firstHourPercent;
+                            $totalSecondHourPercent += $secondHourPercent;
+                            $total8HourPercent += $eightHourPercent;
+                            $total4HourPercent += $otHourPercent;
+                        @endphp
+
+                        <tr>
+                            <td>{{ $floor->name }}</td>
+                            <td>{{ $dayTarget }}</td>
+                            <td>{{ $fullDayAchieved }}</td>
+                            <td>{{ number_format($todayPercent, 2) }}%</td>
+                            <td>{{ number_format($hourlyTarget) }}</td>
+                            <td>{{ number_format($first) }}</td>
+                            <td>{{ number_format($firstHourPercent, 2) }}%</td>
+                            <td>{{ number_format($second) }}</td>
+                            <td>{{ number_format($secondHourPercent, 2) }}%</td>
+                            <td>{{ number_format($eightHourPercent, 2) }}%</td>
+                            <td>{{ number_format($otHourPercent, 2) }}%</td>
+                        </tr>
+                    @endif
+                @endforeach
+
+                <tr class="bg-green">
+                    <td>Grand Total</td>
+                    <td>{{ $sumTodayTarget }}</td>
+                    <td>{{ $sumTodayAchieved }}</td>
+                    <td>{{ number_format($floorCount ? $totalPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ $sumHourlyTarget }}</td>
+                    <td>{{ $sumFirstHour }}</td>
+                    <td>{{ number_format($floorCount ? $totalFirstHourPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ $sumSecondHour }}</td>
+                    <td>{{ number_format($floorCount ? $totalSecondHourPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ number_format($floorCount ? $total8HourPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ number_format($floorCount ? $total4HourPercent / $floorCount : 0, 2) }}%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body text-center"
+                style="background: linear-gradient(90deg, rgba(224, 58, 58, 1) 5%, rgba(0, 0, 255, 1) 55%, rgba(155, 30, 217, 0.75) 95%);">
+                <h3 class="text-bold mt-2">Floor Wise Production Summary Without Brand Floor</h3>
+                <h3 class="text-bold mt-2">Date: {{ \Carbon\Carbon::now()->format('Y-M-d') }}</h3>
+            </div>
+        </div>
+
+        <table class="table table-striped table-bordered table-sm">
+            <thead>
+                <tr
+                    style="background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%); font-size:14px;">
+                    <th>Floor Name</th>
+                    <th>Today Target Sum</th>
+                    <th>Today Achievement Sum</th>
+                    <th>Today Target Achievement %</th>
+                    <th>Hourly Target Sum</th>
+                    <th>First Hour Achievement Sum</th>
+                    <th>First Hour Achievement %</th>
+                    <th>Second Hour Achievement Sum</th>
+                    <th>Second Hour Achievement %</th>
+                    <th>8 Hour Achievement %</th>
+                    <th>4 Hour Achievement %</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $sumTodayTarget = $sumTodayAchieved = $sumHourlyTarget = 0;
+                    $sumFirstHour = $sumSecondHour = $sum8HourAchieved = $sum4HourAchieved = 0;
+                    $totalPercent = $totalFirstHourPercent = $totalSecondHourPercent = 0;
+                    $total8HourPercent = $total4HourPercent = 0;
+                    $floorCount = 0;
+                @endphp
+
+                @foreach ($excludebrandfloorproductions as $floor)
+                    @php
+                        $productions = $floor->hourlyproductions;
+                    @endphp
+
+                    @if ($productions->count())
+                        @php
+                            $floorCount++;
+
+                            $dayTarget = $productions->sum('day_tar');
+                            $hourlyTarget = $productions->sum('hourly_tar');
+
+                            $first = $productions->sum('first');
+                            $second = $productions->sum('second');
+
+                            $fullDayAchieved = $productions->sum(function ($p) {
+                                return $p->first +
+                                    $p->second +
+                                    $p->third +
+                                    $p->fourth +
+                                    $p->fifth +
+                                    $p->sixth +
+                                    $p->seventh +
+                                    $p->eighth +
+                                    $p->ninth +
+                                    $p->tenth +
+                                    $p->eleventh +
+                                    $p->twelfth;
+                            });
+
+                            $eightHourAchieved = $productions->sum(function ($p) {
+                                return $p->first +
+                                    $p->second +
+                                    $p->third +
+                                    $p->fourth +
+                                    $p->fifth +
+                                    $p->sixth +
+                                    $p->seventh +
+                                    $p->eighth;
+                            });
+
+                            $otAchieved = $productions->sum(function ($p) {
+                                return $p->ninth + $p->tenth + $p->eleventh + $p->twelfth;
+                            });
+
+                            // Totals
+                            $sumTodayTarget += $dayTarget;
+                            $sumTodayAchieved += $fullDayAchieved;
+                            $sumHourlyTarget += $hourlyTarget;
+                            $sumFirstHour += $first;
+                            $sumSecondHour += $second;
+                            $sum8HourAchieved += $eightHourAchieved;
+                            $sum4HourAchieved += $otAchieved;
+
+                            // Percentages
+                            $todayPercent = $dayTarget ? ($fullDayAchieved / $dayTarget) * 100 : 0;
+                            $firstHourPercent = $hourlyTarget ? ($first / $hourlyTarget) * 100 : 0;
+                            $secondHourPercent = $hourlyTarget ? ($second / $hourlyTarget) * 100 : 0;
+                            $eightHourPercent = $hourlyTarget ? ($eightHourAchieved / ($hourlyTarget * 8)) * 100 : 0;
+                            $otHourPercent = $hourlyTarget ? ($otAchieved / ($hourlyTarget * 4)) * 100 : 0;
+
+                            // Average Accumulation
+                            $totalPercent += $todayPercent;
+                            $totalFirstHourPercent += $firstHourPercent;
+                            $totalSecondHourPercent += $secondHourPercent;
+                            $total8HourPercent += $eightHourPercent;
+                            $total4HourPercent += $otHourPercent;
+                        @endphp
+
+                        <tr>
+                            <td>{{ $floor->name }}</td>
+                            <td>{{ $dayTarget }}</td>
+                            <td>{{ $fullDayAchieved }}</td>
+                            <td>{{ number_format($todayPercent, 2) }}%</td>
+                            <td>{{ number_format($hourlyTarget) }}</td>
+                            <td>{{ number_format($first) }}</td>
+                            <td>{{ number_format($firstHourPercent, 2) }}%</td>
+                            <td>{{ number_format($second) }}</td>
+                            <td>{{ number_format($secondHourPercent, 2) }}%</td>
+                            <td>{{ number_format($eightHourPercent, 2) }}%</td>
+                            <td>{{ number_format($otHourPercent, 2) }}%</td>
+                        </tr>
+                    @endif
+                @endforeach
+
+                <tr class="bg-green">
+                    <td>Grand Total</td>
+                    <td>{{ $sumTodayTarget }}</td>
+                    <td>{{ $sumTodayAchieved }}</td>
+                    <td>{{ number_format($floorCount ? $totalPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ $sumHourlyTarget }}</td>
+                    <td>{{ $sumFirstHour }}</td>
+                    <td>{{ number_format($floorCount ? $totalFirstHourPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ $sumSecondHour }}</td>
+                    <td>{{ number_format($floorCount ? $totalSecondHourPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ number_format($floorCount ? $total8HourPercent / $floorCount : 0, 2) }}%</td>
+                    <td>{{ number_format($floorCount ? $total4HourPercent / $floorCount : 0, 2) }}%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 
 
