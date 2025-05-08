@@ -37,13 +37,15 @@
 
     <div class="row mb-2">
         <div class="col-md-12">
-        <form action="{{ route('download.hourly.report') }}" method="post">
-        @csrf
-    <input type="hidden" value="{{ $start_date  }}" name="start_date" required>
-    <input type="hidden" value="{{ $end_date }}" name="end_date" required>
-    <input type="hidden" value="{{ $floor_id }}" name="floor_id" required>
-    <button class="btn btn-dark" type="submit">Download Excel Report</button>
-</form>
+            <form action="{{ route('download.hourly.report') }}" method="post">
+                @csrf
+                <input hidden type="date" name="start_date"
+                    value="{{ \Carbon\Carbon::parse($start_date)->format('Y-m-d') }}">
+                <input hidden type="date" name="end_date"
+                    value="{{ \Carbon\Carbon::parse($end_date)->format('Y-m-d') }}">
+                <input type="hidden" value="{{ $floor_id }}" name="floor_id" required>
+                <button class="btn btn-dark" type="submit">Download Excel Report</button>
+            </form>
             <div class="card card-info" style="">
 
                 <h2 class="text-center">Production Report from {{ $start_date }} to {{ $end_date }}</h2>
@@ -113,7 +115,7 @@
                             {{--  //eighthourrutine day --}}
                             <?php $eighthourrutine += $row->sum_first + $row->sum_second + $row->sum_third + $row->sum_fourth + $row->sum_fifth + $row->sum_sixth + $row->sum_seventh + $row->sum_eighth; ?>
                             {{--  //fourhour_ot day --}}
-                            <?php $fourhour_ot += $row->sum_ninth + $row->sum_tenth + $row->sum_eleventh + $row->sum_twelfth ; ?>
+                            <?php $fourhour_ot += $row->sum_ninth + $row->sum_tenth + $row->sum_eleventh + $row->sum_twelfth; ?>
                         @endforeach
                         <tr>
                             <td>Grand Total</td>
@@ -155,14 +157,13 @@
                             </td>
                             <td colspan="4" class="text-bold"> Target Achievement after 08 Hours Routine Duty:
                                 @if ($eighthourrutine > 0 && $sum_hourly_target > 0)
-                                     {{ number_format(( $eighthourrutine/ ($sum_hourly_target*8)) * 100, 2) }}%
+                                    {{ number_format(($eighthourrutine / ($sum_hourly_target * 8)) * 100, 2) }}%
                                 @else
                                     {{ number_format(0, 2) }}%
                                 @endif
                             </td>
                             <td colspan="4" class="text-bold"> Target Achievement during 04 Hours OT:@if ($fourhour_ot > 0 && $sum_hourly_target > 0)
-                                     {{ number_format(( $fourhour_ot / ($sum_hourly_target*4)) * 100, 2) }}%
-
+                                    {{ number_format(($fourhour_ot / ($sum_hourly_target * 4)) * 100, 2) }}%
                                 @else
                                     {{ number_format(0, 2) }}%
                                 @endif

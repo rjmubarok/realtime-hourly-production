@@ -191,8 +191,10 @@ class HourlyproductionController extends Controller
 
         $floor=Floor::where('id', $request->floor_id)->first();
         $floor_id=$floor->id;
-        $start_date = date('Y-m-d', strtotime($request->start_date));
-        $end_date = date('Y-m-d', strtotime($request->end_date));
+        // $start_date = date('Y-m-d', strtotime($request->start_date));
+        // $end_date = date('Y-m-d', strtotime($request->end_date));
+        $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
+        $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
         $report = DB::table('hourlyproductions')
         ->select(
             'line_id',
@@ -238,12 +240,12 @@ class HourlyproductionController extends Controller
     public function downloadReport(Request $request)
 {
     // Validate the request
-    $start_date = $request->input('start_date') . ' 00:00:00';
-    $end_date = $request->input('end_date') . ' 23:59:59';
+    $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
+    $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
     $floor_id = $request->input('floor_id');
 
-    $start_date = date('Y-m-d', strtotime($request->start_date));
-    $end_date = date('Y-m-d', strtotime($request->end_date));
+    // $start_date = date('Y-m-d', strtotime($request->start_date));
+    // $end_date = date('Y-m-d', strtotime($request->end_date));
 
     $report = DB::table('hourlyproductions')
         ->select(
