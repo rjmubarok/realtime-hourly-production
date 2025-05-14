@@ -30,6 +30,42 @@ class HourlyproductionController extends Controller
 
         return view('hourlyproduction', compact('floors','productions'));
     }
+    public function ProductionAdd()
+    {
+         $floors = Floor::whereStatus(1) ->get();
+        $productions=Hourlyproduction::whereDate('created_at', Carbon::today())
+        ->with('line','floor')->get();
+
+
+        return view('hourlyproduction_add', compact('floors','productions'));
+    }
+    public function production_show()
+    {
+         $floors = Floor::whereStatus(1) ->get();
+        $productions=Hourlyproduction::whereDate('created_at', Carbon::today())
+        ->with('line','floor')->get();
+
+
+        return view('hourlyproduction_show', compact('floors','productions'));
+    }
+    public function previous_day()
+    {
+         $floors = Floor::whereStatus(1) ->get();
+        $productions=Hourlyproduction::whereDate('created_at', Carbon::today())
+        ->with('line','floor')->get();
+
+
+        return view('previous_day', compact('floors','productions'));
+    }
+    public function specific_date()
+    {
+         $floors = Floor::whereStatus(1) ->get();
+        $productions=Hourlyproduction::whereDate('created_at', Carbon::today())
+        ->with('line','floor')->get();
+
+
+        return view('specific_date', compact('floors','productions'));
+    }
     public function hourlyproductionAdd(Request $request)
     {
         //return $request->all();

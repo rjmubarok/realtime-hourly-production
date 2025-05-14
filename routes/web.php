@@ -94,6 +94,10 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::POST('/fetch-operator-by-line', [AjaxController::class, 'fetchOperatorByLine'])->name('fetchOperatorByLine');
 
     /*QC Route*/
+    Route::get('/production_add', [HourlyproductionController::class, 'ProductionAdd'])->name('production_add');
+    Route::get('/production_show', [HourlyproductionController::class, 'production_show'])->name('production_show');
+    Route::get('/previous_day', [HourlyproductionController::class, 'previous_day'])->name('previous_day');
+    Route::get('/specific_date', [HourlyproductionController::class, 'specific_date'])->name('specific_date');
     Route::get('/qc-form', [ProductQcController::class, 'qc_add'])->name('productForm');
     Route::post('/qc-form', [ProductQcController::class, 'qc_store'])->name('productFormSubmit');
     // Measurement Route

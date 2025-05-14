@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
 
 
 </head>
@@ -22,7 +22,7 @@
 
 
 
-    <div class="row mb-2">
+    {{--  <div class="row mb-2">
         <div class="col-sm-12">
             <div class="card card-info" style="">
                 <form action="{{ route('fetcLineByFloorforhour') }}" method="post" enctype="multipart/form-data">
@@ -91,8 +91,8 @@
 
             </div>
         </div>
-    </div>
-    <div class="row mb-2">
+    </div>  --}}
+    {{--  <div class="row mb-2">
         <div class="col-sm-12">
             <div class="card card-info" style="">
                 <form action="{{ route('previousdaydata') }}" method="post" enctype="multipart/form-data">
@@ -126,8 +126,8 @@
 
             </div>
         </div>
-    </div>
-    <div class="row mb-2">
+    </div>  --}}
+    {{--  <div class="row mb-2">
         <div class="col-sm-12">
             <div class="card card-info" style="">
                 <form action="{{ route('specific_date_data') }}" method="post" enctype="multipart/form-data">
@@ -150,7 +150,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                             <div class="col-sm-4">
+                            <div class="col-sm-4">
                                 <label for="floor_id"> Specific Date</label>
                                 <input type="date" name="date" class="form-control" id="start_date">
                             </div>
@@ -165,7 +165,7 @@
 
             </div>
         </div>
-    </div>
+    </div>  --}}
     <div class="row mb-2">
         <div class="col-sm-12">
             <div class="card card-info" style="">
@@ -218,7 +218,8 @@
                     <div class="card-header bg-cyan">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="card-title text-bold mt-2">Filter Hourly Production Summary Specific Date</h3>
+                                <h3 class="card-title text-bold mt-2">Filter Hourly Production Summary Specific Date
+                                </h3>
                             </div>
                         </div>
                     </div>
@@ -249,7 +250,8 @@
                     <div class="card-header bg-cyan">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="card-title text-bold mt-2">Filter Hourly Production Summary Date To Date</h3>
+                                <h3 class="card-title text-bold mt-2">Filter Hourly Production Summary Date To Date
+                                </h3>
                             </div>
                         </div>
                     </div>
@@ -282,45 +284,35 @@
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
 
     <script>
+        @if (Session::has('success'))
+
+            toastr.success("{{ Session::get('success') }}");
+        @endif
 
 
 
-  @if(Session::has('success'))
+        @if (Session::has('info'))
 
-  		toastr.success("{{ Session::get('success') }}");
-
-  @endif
-
-
-
-  @if(Session::has('info'))
-
-  		toastr.info("{{ Session::get('info') }}");
-
-  @endif
+            toastr.info("{{ Session::get('info') }}");
+        @endif
 
 
 
-  @if(Session::has('warning'))
+        @if (Session::has('warning'))
 
-  		toastr.warning("{{ Session::get('warning') }}");
-
-  @endif
-
-
-
-  @if(Session::has('error'))
-
-  		toastr.error("{{ Session::get('error') }}");
-
-  @endif
+            toastr.warning("{{ Session::get('warning') }}");
+        @endif
 
 
 
-</script>
+        @if (Session::has('error'))
+
+            toastr.error("{{ Session::get('error') }}");
+        @endif
+    </script>
 
 
 
